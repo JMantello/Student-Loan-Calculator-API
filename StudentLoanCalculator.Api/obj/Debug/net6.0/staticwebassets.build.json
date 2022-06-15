@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "pbGaQkmHNm94Oos3LEV3Zmj7ZI8zT3BXIaJ2CiMCQMA=",
+  "Source": "StudentLoanCalculator.Api",
+  "BasePath": "_content/StudentLoanCalculator.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
