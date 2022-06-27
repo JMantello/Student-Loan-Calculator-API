@@ -17,8 +17,4 @@
     <ProjectReference Include="..\StudentLoanCalculator.Domain\StudentLoanCalculator.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>
