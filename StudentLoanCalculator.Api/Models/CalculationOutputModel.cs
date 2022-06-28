@@ -11,7 +11,7 @@
         public List<double>? RemainingLoanBalances { get; set; }
 
         // Net Worth
-        public int NetWorth { get; set; }
+        public List<double>? NetWorth { get; set; }
 
     }
 }

@@ -52,7 +52,7 @@
             
             for(int i = timeInMonths; i > 0; i--)
             {
-                double loanBalance = (currentLoanAmount * (1 + interestRate)) - monthlyPayment;
+                double loanBalance = Math.Round((currentLoanAmount * (1 + interestRate)) - monthlyPayment, 2);
 
                 if(loanBalance <= 0)
                 {
@@ -69,9 +69,24 @@
             return remainingLoanBalances;
         }
 
-        public double NetWorthCalculator(double cashAsset, double propertyAsset, double investmentsAsset, double mortgageLiability, double loansLiabilty, double debtsLiability, int[] time, double monthlyINvestment, double monthlyLoanPayment, double studentLoanCost, double inflationRate)
+        public List<double> GetProjectedNetWorth(double a_Cash, double a_Property, double a_Investments, double l_Mortgage, double l_Loans, double l_Debts, int timeInYears, double monthlyInvestment, double monthlyLoanPayment, double studentLoanCost, double loanInterestRate, double inflationRate, double investmentGrowthRate)
         {
-            throw new NotImplementedException();
+            List<double> netWorthByYear = new List<double>();
+
+            // Calculate Projected Values
+            for(int year = 1; year <= timeInYears; year++)
+            {
+                double investments = (a_Investments + (monthlyInvestment * 12)) * Math.Pow(1 + investmentGrowthRate, year);
+                double assetsOther = (a_Cash + a_Property) * Math.Pow(1 + 0.08, year);
+
+                double liabilitiesOther = (l_Mortgage + l_Debts) * Math.Pow(1 + 0.6446, year);
+                double loans = (l_Loans + studentLoanCost - monthlyLoanPayment * 12) * Math.Pow(1 + loanInterestRate, year);
+
+                double netWorth = (assetsOther + investments - liabilitiesOther - loans) * (1 - inflationRate);
+                netWorthByYear.Add(Math.Round(netWorth, 2));
+            }
+
+            return netWorthByYear;
         }
     }
 }

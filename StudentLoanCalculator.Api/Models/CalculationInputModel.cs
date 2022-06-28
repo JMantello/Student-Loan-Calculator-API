@@ -13,14 +13,11 @@
         public double InvestmentGrowthRate { get; set; } 
 
         // Net Worth
-        // Assets
         public double CashAsset { get; set; }
         public double PropertyAsset { get; set; }
         public double InvestmentsAsset { get; set; }
-
-        // Liabilities
         public double MortgageLiability { get; set; }
-        public double LoansLiability { get; set; }
+        public double OtherLoansLiability { get; set; }
         public double DebtsLiability { get; set; }
 
     }
