@@ -1,6 +1,6 @@
 ﻿namespace StudentLoanCalculator.Api.Models
 {
-    public class CalculationOutputModel
+    public class OutputModel
     {
         public double MonthlyPaymentToLoan { get; set; }
         public double MonthlyPaymentToInvest{ get; set; }

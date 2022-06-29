@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
+using StudentLoanCalculator.Api.Data;
+using StudentLoanCalculator.Api.Identity;
 using StudentLoanCalculator.Api.Models;
 using StudentLoanCalculator.Domain;
 
@@ -8,21 +11,25 @@ namespace StudentLoanCalculator___Team_1.Controllers
     public class StudentLoanCalculatorController : Controller
     {
         private ILoanCalculator calc;
+        private MongoCRUD context;
+        private Rates rates;
 
-        public StudentLoanCalculatorController(ILoanCalculator loanCalculator)
+        public StudentLoanCalculatorController(ILoanCalculator loanCalculator, MongoCRUD context)
         {
             this.calc = loanCalculator;
+            this.context = context;
+            //rates = context.LoadRecords<Rates>("Rates")[0];
         }
 
         public IActionResult Index()
         {
-            return Json("From StudentLoanCalculator");
+            return Json("From Student Loan Calculator");
         }
 
         [HttpGet("Calculate")] 
-        public CalculationOutputModel Calculate(CalculationInputModel input)
+        public OutputModel Calculate(InputModel input)
         {
-            CalculationOutputModel outputModel = new CalculationOutputModel();
+            OutputModel outputModel = new OutputModel();
 
             // Validation
             if (!ModelState.IsValid)
@@ -48,7 +55,7 @@ namespace StudentLoanCalculator___Team_1.Controllers
             double loanAmount = input.LoanAmount;
             int termInYears = input.TermInYears;
             double minimumPayment = input.MinimumPayment;
-            double inflationRate = 0.086;
+            double inflationRate = 0.086; // Call db
             
             // Convert from percentage to decimal point
             double interestRate;
@@ -79,7 +86,7 @@ namespace StudentLoanCalculator___Team_1.Controllers
             double investmentAsset = input.InvestmentsAsset;
             double mortgageLiability = input.MortgageLiability;
             double otherLoansLiability = input.OtherLoansLiability;
-            double debtsLiability = input.DebtsLiability;
+            double debtsLiability = input.OtherDebtsLiability;
 
             List<double> netWorth = calc.GetProjectedNetWorth(cashAsset, propertyAsset, investmentAsset, mortgageLiability, otherLoansLiability, debtsLiability, termInYears, monthlyInvestmentPayment, monthlyLoanPayment, loanAmount, interestRate, inflationRate, investmentGrowthRate);
 
