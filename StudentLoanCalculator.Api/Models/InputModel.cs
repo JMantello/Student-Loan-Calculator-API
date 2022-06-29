@@ -1,6 +1,6 @@
 ﻿namespace StudentLoanCalculator.Api.Models
 {
-    public class CalculationInputModel
+    public class InputModel
     {
         // Loan Data
         public double DiscretionaryIncome { get; set; } // Monthly
@@ -18,7 +18,7 @@
         public double InvestmentsAsset { get; set; }
         public double MortgageLiability { get; set; }
         public double OtherLoansLiability { get; set; }
-        public double DebtsLiability { get; set; }
+        public double OtherDebtsLiability { get; set; }
 
     }
 }

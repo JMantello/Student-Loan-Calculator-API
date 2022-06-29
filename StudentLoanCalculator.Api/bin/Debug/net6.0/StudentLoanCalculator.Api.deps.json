@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v6.0": {
       "StudentLoanCalculator.Api/1.0.0": {
         "dependencies": {
-          "MongoDB.Driver": "2.16.0",
+          "MongoDB.Driver": "2.16.1",
           "StudentLoanCalculator.Domain": "1.0.0",
           "Swashbuckle.AspNetCore": "6.2.3"
         },
@@ -16,14 +16,14 @@
           "StudentLoanCalculator.Api.dll": {}
         }
       },
-      "DnsClient/1.6.0": {
+      "DnsClient/1.6.1": {
         "dependencies": {
           "Microsoft.Win32.Registry": "5.0.0"
         },
         "runtime": {
           "lib/net5.0/DnsClient.dll": {
-            "assemblyVersion": "1.6.0.0",
-            "fileVersion": "1.6.0.0"
+            "assemblyVersion": "1.6.1.0",
+            "fileVersion": "1.6.1.0"
           }
         }
       },
@@ -43,42 +43,42 @@
           "System.Security.Principal.Windows": "5.0.0"
         }
       },
-      "MongoDB.Bson/2.16.0": {
+      "MongoDB.Bson/2.16.1": {
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "5.0.0"
         },
         "runtime": {
           "lib/netstandard2.1/MongoDB.Bson.dll": {
-            "assemblyVersion": "2.16.0.0",
-            "fileVersion": "2.16.0.0"
+            "assemblyVersion": "2.16.1.0",
+            "fileVersion": "2.16.1.0"
           }
         }
       },
-      "MongoDB.Driver/2.16.0": {
+      "MongoDB.Driver/2.16.1": {
         "dependencies": {
-          "MongoDB.Bson": "2.16.0",
-          "MongoDB.Driver.Core": "2.16.0",
-          "MongoDB.Libmongocrypt": "1.5.2"
+          "MongoDB.Bson": "2.16.1",
+          "MongoDB.Driver.Core": "2.16.1",
+          "MongoDB.Libmongocrypt": "1.5.3"
         },
         "runtime": {
           "lib/netstandard2.1/MongoDB.Driver.dll": {
-            "assemblyVersion": "2.16.0.0",
-            "fileVersion": "2.16.0.0"
+            "assemblyVersion": "2.16.1.0",
+            "fileVersion": "2.16.1.0"
           }
         }
       },
-      "MongoDB.Driver.Core/2.16.0": {
+      "MongoDB.Driver.Core/2.16.1": {
         "dependencies": {
-          "DnsClient": "1.6.0",
-          "MongoDB.Bson": "2.16.0",
-          "MongoDB.Libmongocrypt": "1.5.2",
+          "DnsClient": "1.6.1",
+          "MongoDB.Bson": "2.16.1",
+          "MongoDB.Libmongocrypt": "1.5.3",
           "SharpCompress": "0.30.1",
           "System.Buffers": "4.5.1"
         },
         "runtime": {
           "lib/netstandard2.1/MongoDB.Driver.Core.dll": {
-            "assemblyVersion": "2.16.0.0",
-            "fileVersion": "2.16.0.0"
+            "assemblyVersion": "2.16.1.0",
+            "fileVersion": "2.16.1.0"
           }
         },
         "runtimeTargets": {
@@ -119,11 +119,11 @@
           }
         }
       },
-      "MongoDB.Libmongocrypt/1.5.2": {
+      "MongoDB.Libmongocrypt/1.5.3": {
         "runtime": {
           "lib/netstandard2.1/MongoDB.Libmongocrypt.dll": {
-            "assemblyVersion": "1.5.2.0",
-            "fileVersion": "1.5.2.0"
+            "assemblyVersion": "1.5.3.0",
+            "fileVersion": "1.5.3.0"
           }
         },
         "runtimeTargets": {
@@ -212,12 +212,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "DnsClient/1.6.0": {
+    "DnsClient/1.6.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-kVd3IxAs5EQZSKTQhMUaJmuOQ1n2VWKExatdqNszsxxKzTB+Toaxx3M1DsN3yKfHloMXPmt6fgfcOqRwKheoUQ==",
-      "path": "dnsclient/1.6.0",
-      "hashPath": "dnsclient.1.6.0.nupkg.sha512"
+      "sha512": "sha512-4H/f2uYJOZ+YObZjpY9ABrKZI+JNw3uizp6oMzTXwDw6F+2qIPhpRl/1t68O/6e98+vqNiYGu+lswmwdYUy3gg==",
+      "path": "dnsclient/1.6.1",
+      "hashPath": "dnsclient.1.6.1.nupkg.sha512"
     },
     "Microsoft.Extensions.ApiDescription.Server/3.0.0": {
       "type": "package",
@@ -247,33 +247,33 @@
       "path": "microsoft.win32.registry/5.0.0",
       "hashPath": "microsoft.win32.registry.5.0.0.nupkg.sha512"
     },
-    "MongoDB.Bson/2.16.0": {
+    "MongoDB.Bson/2.16.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-VWy5tQdp+2uwzDpQWkMlI5FNTOwzviX3a2PNgrkCZAvBMKuUqCdGMVKH5trNtvUFjYGL0H5mvRr3ryS8LbnUDg==",
-      "path": "mongodb.bson/2.16.0",
-      "hashPath": "mongodb.bson.2.16.0.nupkg.sha512"
+      "sha512": "sha512-d647KTPQ7hWqJmvCg80iiVdm239llaUwMyIeRF/0zKpN+ddRWh9jT/g6R6WQrmi4qd7yodvv/Jn0rpEqh4QN8g==",
+      "path": "mongodb.bson/2.16.1",
+      "hashPath": "mongodb.bson.2.16.1.nupkg.sha512"
     },
-    "MongoDB.Driver/2.16.0": {
+    "MongoDB.Driver/2.16.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-sTDRFxfefnkgkFKH4ebTHrlkPrGTdRWC/csC0RB0r/0dPu+NvROUlEJ94NBjhm/NZvGBCCDIfFfy51EU+0wYdg==",
-      "path": "mongodb.driver/2.16.0",
-      "hashPath": "mongodb.driver.2.16.0.nupkg.sha512"
+      "sha512": "sha512-LqDWfRG7gM1tZKcG9Q/vuQGYF5GsBuxUF5KcOgvWrE6P7pSkOSL9xGZ7ABZ6XRVECGEQs+N6GyU1E4ViI4lh+g==",
+      "path": "mongodb.driver/2.16.1",
+      "hashPath": "mongodb.driver.2.16.1.nupkg.sha512"
     },
-    "MongoDB.Driver.Core/2.16.0": {
+    "MongoDB.Driver.Core/2.16.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-F37pZ72Ii1mwjviDKKSAzEqTD8wM8QX66PPB8oDpitxHz3jejR80Rx8dl4dYwWwhdCcrt56ul1JBWARfghq8og==",
-      "path": "mongodb.driver.core/2.16.0",
-      "hashPath": "mongodb.driver.core.2.16.0.nupkg.sha512"
+      "sha512": "sha512-oJZnXHnAyTd/haHYdbfKMRmPEZ1fFrndv8xhorHeTkUDeGgsPA89vpGMHcjppUyHMYBpLgHbn6GoMkleHKsTHg==",
+      "path": "mongodb.driver.core/2.16.1",
+      "hashPath": "mongodb.driver.core.2.16.1.nupkg.sha512"
     },
-    "MongoDB.Libmongocrypt/1.5.2": {
+    "MongoDB.Libmongocrypt/1.5.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-xalMzpRIh+nl/KqyUteEpaPZHv4tGHMAZ1AD59FgJWx4X8T3LQD/fz3qpQ2KWDlNmqyCf8iCEpIqcZI8zNOkCg==",
-      "path": "mongodb.libmongocrypt/1.5.2",
-      "hashPath": "mongodb.libmongocrypt.1.5.2.nupkg.sha512"
+      "sha512": "sha512-OWWxuyuxbjAmOLPoaoUEYnIW4F7qexS6XYOdu6absxyGAqLBWEY+M4WY2Y0km2UUG1+QOPdebpb/7cg5BIEbdw==",
+      "path": "mongodb.libmongocrypt/1.5.3",
+      "hashPath": "mongodb.libmongocrypt.1.5.3.nupkg.sha512"
     },
     "SharpCompress/0.30.1": {
       "type": "package",

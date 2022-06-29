@@ -1,5 +1,7 @@
-
 using StudentLoanCalculator.Domain;
+using StudentLoanCalculator.Api.Identity;
+using StudentLoanCalculator.Api.Models;
+using StudentLoanCalculator.Api.Data;
 
 namespace StudentLoanCalculator.Api
 {
@@ -16,6 +18,10 @@ namespace StudentLoanCalculator.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton<ILoanCalculator, LoanCalculator>();
+
+            // Configure database
+            MongoCRUD db = new MongoCRUD("StudentLoanCalculatorDb");
+            builder.Services.AddSingleton(db);
 
             var app = builder.Build();
 
@@ -34,6 +40,39 @@ namespace StudentLoanCalculator.Api
 
             app.Run();
 
+        }
+
+        private void InsertDefaultUser()
+        {
+            MongoCRUD db = new MongoCRUD("StudentLoanCalculatorDb");
+
+            UserModel defaultUser = new UserModel();
+            defaultUser.FirstName = "Jonathan";
+            defaultUser.LastName = "Mantello";
+            defaultUser.EmailAddress = "jmantello@emailadress.com";
+            defaultUser.SavedCalculations = new List<SavedCalculation>();
+
+            InputModel inputModel = new InputModel();
+            inputModel.DiscretionaryIncome = 1500;
+            inputModel.LoanAmount = 40000;
+            inputModel.InterestRate = 5.8;
+            inputModel.TermInYears = 20;
+            inputModel.MinimumPayment = 200;
+            inputModel.InvestmentGrowthRate = 10.5;
+            inputModel.CashAsset = 20000;
+            inputModel.PropertyAsset = 400000;
+            inputModel.InvestmentsAsset = 0;
+            inputModel.MortgageLiability = 0;
+            inputModel.OtherLoansLiability = 100000;
+            inputModel.OtherDebtsLiability = 0;
+
+            SavedCalculation savedCalculation = new SavedCalculation();
+            savedCalculation.Name = "My saved calculation";
+            savedCalculation.InputModel = inputModel;
+
+            defaultUser.SavedCalculations.Add(savedCalculation);
+
+            db.InsertRecord("Users", defaultUser);
         }
     }
 }
