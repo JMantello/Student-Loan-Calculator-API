@@ -12,13 +12,13 @@ namespace StudentLoanCalculator___Team_1.Controllers
     {
         private ILoanCalculator calc;
         private MongoCRUD context;
-        private Rates rates;
+        private GrowthRatesModel growthRates;
 
         public StudentLoanCalculatorController(ILoanCalculator loanCalculator, MongoCRUD context)
         {
             this.calc = loanCalculator;
             this.context = context;
-            //rates = context.LoadRecords<Rates>("Rates")[0];
+            growthRates = context.LoadRecords<GrowthRatesModel>("GrowthRates")[0];
         }
 
         public IActionResult Index()
@@ -55,7 +55,7 @@ namespace StudentLoanCalculator___Team_1.Controllers
             double loanAmount = input.LoanAmount;
             int termInYears = input.TermInYears;
             double minimumPayment = input.MinimumPayment;
-            double inflationRate = 0.086; // Call db
+            double inflationRate = growthRates.inflation;
             
             // Convert from percentage to decimal point
             double interestRate;
@@ -79,6 +79,18 @@ namespace StudentLoanCalculator___Team_1.Controllers
             double returnOnInvestment = Math.Round(calc.GetReturnOnInvestment(monthlyInvestmentPayment, termInMonths, projectedInvestmentTotal), 2);
             double suggestedInvestmentAmount = Math.Round(calc.GetSuggestedInvestment(loanInterest, monthlyInvestmentGrowthRate, termInMonths), 2);
             List<double> remainingLoanBalances = calc.GetRemainingLoanBalances(loanAmount, monthlyInterestRate, monthlyLoanPayment, termInMonths);
+
+            // Change remainingLoanBalances to yearly instead of monthly
+            //List<double> remainingLoanBalancesYearly = new List<double>();
+            //double spacing = 12;
+            //double first = 0;
+            //for (int i = 0; i < termInMonths; i++)
+            //{
+            //    if (i == first || i % spacing == 11)
+            //    {
+            //        remainingLoanBalancesYearly.Add(remainingLoanBalances.ToArray()[i]);
+            //    }
+            //}
 
             // Calculate net worth
             double cashAsset = input.CashAsset;

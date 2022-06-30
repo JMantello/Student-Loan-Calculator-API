@@ -10,6 +10,6 @@ namespace StudentLoanCalculator.Api.Identity
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string EmailAddress { get; set; }
-        public List<SavedCalculation> SavedCalculations { get; set; }
+        public List<SavedCalculationModel> SavedCalculations { get; set; }
     }
 }

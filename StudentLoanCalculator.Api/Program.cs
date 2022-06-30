@@ -50,7 +50,7 @@ namespace StudentLoanCalculator.Api
             defaultUser.FirstName = "Jonathan";
             defaultUser.LastName = "Mantello";
             defaultUser.EmailAddress = "jmantello@emailadress.com";
-            defaultUser.SavedCalculations = new List<SavedCalculation>();
+            defaultUser.SavedCalculations = new List<SavedCalculationModel>();
 
             InputModel inputModel = new InputModel();
             inputModel.DiscretionaryIncome = 1500;
@@ -66,7 +66,7 @@ namespace StudentLoanCalculator.Api
             inputModel.OtherLoansLiability = 100000;
             inputModel.OtherDebtsLiability = 0;
 
-            SavedCalculation savedCalculation = new SavedCalculation();
+            SavedCalculationModel savedCalculation = new SavedCalculationModel();
             savedCalculation.Name = "My saved calculation";
             savedCalculation.InputModel = inputModel;
 
