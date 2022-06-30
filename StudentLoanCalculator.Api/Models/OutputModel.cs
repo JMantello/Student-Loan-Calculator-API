@@ -13,5 +13,6 @@
         // Net Worth
         public List<double>? NetWorth { get; set; }
 
+
     }
 }

@@ -20,8 +20,8 @@ namespace StudentLoanCalculator.Api
             builder.Services.AddSingleton<ILoanCalculator, LoanCalculator>();
 
             // Configure database
-            MongoCRUD db = new MongoCRUD("StudentLoanCalculatorDb");
-            builder.Services.AddSingleton(db);
+            //MongoCRUD db = new MongoCRUD("StudentLoanCalculatorDb");
+            //builder.Services.AddSingleton(db);
 
             var app = builder.Build();
 
