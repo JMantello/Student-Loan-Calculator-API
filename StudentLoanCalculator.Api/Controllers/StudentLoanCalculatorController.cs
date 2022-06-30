@@ -11,14 +11,22 @@ namespace StudentLoanCalculator___Team_1.Controllers
     public class StudentLoanCalculatorController : Controller
     {
         private ILoanCalculator calc;
-        private MongoCRUD context;
+        //private MongoCRUD context;
         private GrowthRatesModel growthRates;
 
-        public StudentLoanCalculatorController(ILoanCalculator loanCalculator, MongoCRUD context)
+        public StudentLoanCalculatorController(ILoanCalculator loanCalculator)
         {
+            //, MongoCRUD context
             this.calc = loanCalculator;
-            this.context = context;
-            growthRates = context.LoadRecords<GrowthRatesModel>("GrowthRates")[0];
+            //this.context = context;
+            //context.LoadRecords<GrowthRatesModel>("GrowthRates")[0];
+            growthRates = new GrowthRatesModel
+            {
+                inflation = 0.086,
+                conservative = 0.149,
+                moderate = 0.173,
+                aggressive = 0.238
+            };
         }
 
         public IActionResult Index()
@@ -81,16 +89,8 @@ namespace StudentLoanCalculator___Team_1.Controllers
             List<double> remainingLoanBalances = calc.GetRemainingLoanBalances(loanAmount, monthlyInterestRate, monthlyLoanPayment, termInMonths);
 
             // Change remainingLoanBalances to yearly instead of monthly
-            //List<double> remainingLoanBalancesYearly = new List<double>();
-            //double spacing = 12;
-            //double first = 0;
-            //for (int i = 0; i < termInMonths; i++)
-            //{
-            //    if (i == first || i % spacing == 11)
-            //    {
-            //        remainingLoanBalancesYearly.Add(remainingLoanBalances.ToArray()[i]);
-            //    }
-            //}
+            List<double> remainingLoanBalancesYearly = new List<double>();
+            remainingLoanBalancesYearly = remainingLoanBalances.Where((b, i) => i == 0 || (i + 1) % 12 == 0).ToList();
 
             // Calculate net worth
             double cashAsset = input.CashAsset;
@@ -108,7 +108,7 @@ namespace StudentLoanCalculator___Team_1.Controllers
             outputModel.InvestmentValue = projectedInvestmentTotal;
             outputModel.ReturnOnInvestment = returnOnInvestment;
             outputModel.SuggestedInvestmentAmount = suggestedInvestmentAmount;
-            outputModel.RemainingLoanBalances = remainingLoanBalances;
+            outputModel.RemainingLoanBalances = remainingLoanBalancesYearly;
             outputModel.NetWorth = netWorth;
 
             return outputModel;

@@ -9,9 +9,15 @@
         public double GetMonthlyLoanPayment(double loanAmount, double interestRate, int timeInMonths, double minimumPayment)
         {
             double monthlyPayment = loanAmount * interestRate * 
-                (Math.Pow((1 + interestRate), timeInMonths) / (Math.Pow((1 + interestRate), timeInMonths) - 1));
+                (Math.Pow(1 + interestRate, timeInMonths) / (Math.Pow((1 + interestRate), timeInMonths) - 1));
 
-            return monthlyPayment;
+            if (monthlyPayment >= minimumPayment)
+            {
+                return monthlyPayment;
+            } else
+            {
+                return minimumPayment;
+            }
         }
 
         public double GetMonthlyInvestmentPayment(double loanPayment, double discretionaryIncome)
