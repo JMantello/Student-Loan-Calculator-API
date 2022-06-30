@@ -81,16 +81,16 @@ namespace StudentLoanCalculator___Team_1.Controllers
             List<double> remainingLoanBalances = calc.GetRemainingLoanBalances(loanAmount, monthlyInterestRate, monthlyLoanPayment, termInMonths);
 
             // Change remainingLoanBalances to yearly instead of monthly
-            List<double> remainingLoanBalancesYearly = new List<double>();
-            double spacing = 12;
-            double first = 0;
-            for (int i = 0; i < termInMonths; i++)
-            {
-                if (i == first || i % spacing == 11)
-                {
-                    remainingLoanBalancesYearly.Add(remainingLoanBalances.ToArray()[i]);
-                }
-            }
+            //List<double> remainingLoanBalancesYearly = new List<double>();
+            //double spacing = 12;
+            //double first = 0;
+            //for (int i = 0; i < termInMonths; i++)
+            //{
+            //    if (i == first || i % spacing == 11)
+            //    {
+            //        remainingLoanBalancesYearly.Add(remainingLoanBalances.ToArray()[i]);
+            //    }
+            //}
 
             // Calculate net worth
             double cashAsset = input.CashAsset;
@@ -108,7 +108,7 @@ namespace StudentLoanCalculator___Team_1.Controllers
             outputModel.InvestmentValue = projectedInvestmentTotal;
             outputModel.ReturnOnInvestment = returnOnInvestment;
             outputModel.SuggestedInvestmentAmount = suggestedInvestmentAmount;
-            outputModel.RemainingLoanBalances = remainingLoanBalancesYearly;
+            outputModel.RemainingLoanBalances = remainingLoanBalances;
             outputModel.NetWorth = netWorth;
 
             return outputModel;
