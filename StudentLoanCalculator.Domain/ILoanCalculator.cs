@@ -15,8 +15,6 @@ namespace StudentLoanCalculator.Domain
         public double GetReturnOnInvestment(double monthlyInvestment, int timeInMonths, double investmentTotal);
         public double GetSuggestedInvestment(double loanInterest, double growthRate, double timeInMonths);
         public List<double> GetRemainingLoanBalances(double loanAmount, double interestRate, double monthlyPayment, int timeInMonths);
-
-        // Net Worth Calculation
         List<double> GetProjectedNetWorth(double cashAsset, double propertyAsset, double investmentsAsset, double mortgageLiability, double loansLiabilty, double debtsLiability, int timeInYears, double monthlyInvestment, double monthlyLoanPayment, double studentLoanCost, double loanInterestRate, double inflationRate, double investmentGrowthRate);
     }
 }
