@@ -80,7 +80,7 @@
             List<double> netWorthByYear = new List<double>();
 
             // Calculate Projected Values
-            for(int year = 1; year <= timeInYears; year++)
+            for(int year = 0; year <= timeInYears; year++)
             {
                 double investments = (a_Investments + (monthlyInvestment * 12)) * Math.Pow(1 + investmentGrowthRate, year);
                 double assetsOther = (a_Cash + a_Property) * Math.Pow(1 + 0.08, year);
