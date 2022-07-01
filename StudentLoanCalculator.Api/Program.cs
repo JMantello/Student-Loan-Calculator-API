@@ -12,6 +12,13 @@ namespace StudentLoanCalculator.Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("OpenPolicy", builder =>
+                {
+                    builder.AllowAnyOrigin().WithMethods("GET", "POST");
+                });
+            });
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -19,7 +26,7 @@ namespace StudentLoanCalculator.Api
             builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton<ILoanCalculator, LoanCalculator>();
 
-            // Configure database
+            // Inject database
             //MongoCRUD db = new MongoCRUD("StudentLoanCalculatorDb");
             //builder.Services.AddSingleton(db);
 

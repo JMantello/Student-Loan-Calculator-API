@@ -10,16 +10,17 @@ namespace StudentLoanCalculator___Team_1.Controllers
     [Route("[controller]")]
     public class StudentLoanCalculatorController : Controller
     {
-        private ILoanCalculator calc;
         //private MongoCRUD context;
+        private ILoanCalculator calc;
         private GrowthRatesModel growthRates;
 
-        public StudentLoanCalculatorController(ILoanCalculator loanCalculator)
+        public StudentLoanCalculatorController(ILoanCalculator loanCalculator) //, MongoCRUD context
         {
-            //, MongoCRUD context
-            this.calc = loanCalculator;
             //this.context = context;
             //context.LoadRecords<GrowthRatesModel>("GrowthRates")[0];
+
+            this.calc = loanCalculator;
+
             growthRates = new GrowthRatesModel
             {
                 inflation = 0.086,
@@ -34,12 +35,12 @@ namespace StudentLoanCalculator___Team_1.Controllers
             return Json("From Student Loan Calculator");
         }
 
-        [HttpGet("Calculate")] 
+        [HttpGet("Calculate")]
         public OutputModel Calculate(InputModel input)
         {
             OutputModel outputModel = new OutputModel();
 
-            // Validation
+            // Validate input
             if (!ModelState.IsValid)
             {
                 Console.WriteLine("Model state is invalid");
@@ -58,28 +59,25 @@ namespace StudentLoanCalculator___Team_1.Controllers
                 return outputModel;
             }
 
-            // Conversions / Defining Values
+            // Destructure input
             double discretionaryIncome = input.DiscretionaryIncome;
             double loanAmount = input.LoanAmount;
             int termInYears = input.TermInYears;
+            int termInMonths = termInYears * 12;
             double minimumPayment = input.MinimumPayment;
             double inflationRate = growthRates.inflation;
-            
-            // Convert from percentage to decimal point
-            double interestRate;
-            if (input.InterestRate >= 1) { interestRate = input.InterestRate * 0.01D; }
-            else { interestRate = input.InterestRate; }
-
-            // Convert from percentage to decimal point
-            double investmentGrowthRate;
-            if (input.InvestmentGrowthRate >= 1) { investmentGrowthRate = input.InvestmentGrowthRate/ 100; }
-            else { investmentGrowthRate = input.InvestmentGrowthRate; }
-
+            double cashAsset = input.CashAsset;
+            double propertyAsset = input.PropertyAsset;
+            double investmentAsset = input.InvestmentsAsset;
+            double mortgageLiability = input.MortgageLiability;
+            double otherLoansLiability = input.OtherLoansLiability;
+            double debtsLiability = input.OtherDebtsLiability;
+            double interestRate = input.InterestRate * 0.01D; // Convert from percentage to decimal
             double monthlyInterestRate = interestRate / 12;
-            int termInMonths = termInYears * 12;
+            double investmentGrowthRate = input.InvestmentGrowthRate * 0.01D; // Convert from percentage to decimal
             double monthlyInvestmentGrowthRate = investmentGrowthRate / 12;
 
-            // Calculate student loan
+            // Calculations
             double monthlyLoanPayment = Math.Round(calc.GetMonthlyLoanPayment(loanAmount, monthlyInterestRate, termInMonths, minimumPayment), 2, MidpointRounding.AwayFromZero);
             double monthlyInvestmentPayment = Math.Round(calc.GetMonthlyInvestmentPayment(monthlyLoanPayment, discretionaryIncome), 2);
             double loanInterest = Math.Round(calc.GetLoanInterest(loanAmount, termInMonths, monthlyLoanPayment), 2);
@@ -87,21 +85,11 @@ namespace StudentLoanCalculator___Team_1.Controllers
             double returnOnInvestment = Math.Round(calc.GetReturnOnInvestment(monthlyInvestmentPayment, termInMonths, projectedInvestmentTotal), 2);
             double suggestedInvestmentAmount = Math.Round(calc.GetSuggestedInvestment(loanInterest, monthlyInvestmentGrowthRate, termInMonths), 2);
             List<double> remainingLoanBalances = calc.GetRemainingLoanBalances(loanAmount, monthlyInterestRate, monthlyLoanPayment, termInMonths);
-
-            // Change remainingLoanBalances to yearly instead of monthly
-            List<double> remainingLoanBalancesYearly = new List<double>();
+            List<double> remainingLoanBalancesYearly = new List<double>(); // Change remainingLoanBalances to yearly instead of monthly
             remainingLoanBalancesYearly = remainingLoanBalances.Where((b, i) => i == 0 || (i + 1) % 12 == 0).ToList();
-
-            // Calculate net worth
-            double cashAsset = input.CashAsset;
-            double propertyAsset = input.PropertyAsset;
-            double investmentAsset = input.InvestmentsAsset;
-            double mortgageLiability = input.MortgageLiability;
-            double otherLoansLiability = input.OtherLoansLiability;
-            double debtsLiability = input.OtherDebtsLiability;
-
             List<double> netWorth = calc.GetProjectedNetWorth(cashAsset, propertyAsset, investmentAsset, mortgageLiability, otherLoansLiability, debtsLiability, termInYears, monthlyInvestmentPayment, monthlyLoanPayment, loanAmount, interestRate, inflationRate, investmentGrowthRate);
 
+            // Bind output
             outputModel.MonthlyPaymentToLoan = monthlyLoanPayment;
             outputModel.MonthlyPaymentToInvest = monthlyInvestmentPayment;
             outputModel.InterestPaid = loanInterest;

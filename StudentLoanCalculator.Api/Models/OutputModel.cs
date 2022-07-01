@@ -9,8 +9,6 @@
         public double ReturnOnInvestment { get; set; }
         public double SuggestedInvestmentAmount { get; set; }
         public List<double>? RemainingLoanBalances { get; set; }
-
-        // Net Worth
         public List<double>? NetWorth { get; set; }
 
 
