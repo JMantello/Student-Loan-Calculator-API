@@ -14,9 +14,10 @@ namespace StudentLoanCalculator.Api
             // Add services to the container.
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("OpenPolicy", builder =>
+                options.AddPolicy("LocalDevelopment", builder =>
                 {
-                    builder.AllowAnyOrigin().WithMethods("GET", "POST");
+                    builder.WithOrigins("http://localhost:4200")
+                    .WithMethods("GET", "POST");
                 });
             });
 
@@ -40,6 +41,8 @@ namespace StudentLoanCalculator.Api
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("LocalDevelopment");
 
             app.UseAuthorization();
 
@@ -66,12 +69,6 @@ namespace StudentLoanCalculator.Api
             inputModel.TermInYears = 20;
             inputModel.MinimumPayment = 200;
             inputModel.InvestmentGrowthRate = 10.5;
-            inputModel.CashAsset = 20000;
-            inputModel.PropertyAsset = 400000;
-            inputModel.InvestmentsAsset = 0;
-            inputModel.MortgageLiability = 0;
-            inputModel.OtherLoansLiability = 100000;
-            inputModel.OtherDebtsLiability = 0;
 
             SavedCalculationModel savedCalculation = new SavedCalculationModel();
             savedCalculation.Name = "My saved calculation";

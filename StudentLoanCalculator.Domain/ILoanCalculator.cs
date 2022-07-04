@@ -8,13 +8,22 @@ namespace StudentLoanCalculator.Domain
 {
     public interface ILoanCalculator
     {
-        public double GetMonthlyLoanPayment(double loanAmount, double interestRate, int timeInMonths, double minimumPayment);
-        public double GetMonthlyInvestmentPayment(double loanPayment, double discretionaryIncome);
-        public double GetLoanInterest(double loanAmount, int timeInMonths, double monthlyPayment);
-        public double GetProjectedInvestment(double monthlyInvestment, double growthRate, int timeInMonths);
-        public double GetReturnOnInvestment(double monthlyInvestment, int timeInMonths, double investmentTotal);
-        public double GetSuggestedInvestment(double loanInterest, double growthRate, double timeInMonths);
-        public List<double> GetRemainingLoanBalances(double loanAmount, double interestRate, double monthlyPayment, int timeInMonths);
-        List<double> GetProjectedNetWorth(double cashAsset, double propertyAsset, double investmentsAsset, double mortgageLiability, double loansLiabilty, double debtsLiability, int timeInYears, double monthlyInvestment, double monthlyLoanPayment, double studentLoanCost, double loanInterestRate, double inflationRate, double investmentGrowthRate);
+        public double MonthlyLoanPayment(double loanAmount, double interestRate, int timeInMonths, double minimumPayment);
+       
+        public double MonthlyInvestmentPayment(double loanPayment, double discretionaryIncome);
+       
+        public double LoanInterest(double loanAmount, int timeInMonths, double monthlyPayment);
+        
+        public double ProjectedInvestment(double monthlyInvestment, double growthRate, int timeInMonths);
+        
+        public double ReturnOnInvestment(double monthlyInvestment, int timeInMonths, double investmentTotal);
+        
+        public double SuggestedInvestment(double loanInterest, double growthRate, double timeInMonths);
+        
+        public List<double> RemainingLoanBalances(double loanAmount, double monthyInterestRate, double monthlyPayment, int timeInMonths);
+        
+        List<double> MonthlyInvestmentGrowth(double monthlyInvestment, double monthlyInvestmentGrowthRate, int months);
+
+        public List<double> MonthlyNetWorthImpact(double[] liabilityRemaining, double[] assets);
     }
 }
