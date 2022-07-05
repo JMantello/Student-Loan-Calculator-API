@@ -12,13 +12,5 @@
         // Investment Risk
         public double InvestmentGrowthRate { get; set; } 
 
-        // Net Worth
-        public double CashAsset { get; set; }
-        public double PropertyAsset { get; set; }
-        public double InvestmentsAsset { get; set; }
-        public double MortgageLiability { get; set; }
-        public double OtherLoansLiability { get; set; }
-        public double OtherDebtsLiability { get; set; }
-
     }
 }

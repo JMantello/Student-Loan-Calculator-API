@@ -6,7 +6,7 @@
         {
         }
 
-        public double GetMonthlyLoanPayment(double loanAmount, double interestRate, int timeInMonths, double minimumPayment)
+        public double MonthlyLoanPayment(double loanAmount, double interestRate, int timeInMonths, double minimumPayment)
         {
             double monthlyPayment = loanAmount * interestRate * 
                 (Math.Pow(1 + interestRate, timeInMonths) / (Math.Pow((1 + interestRate), timeInMonths) - 1));
@@ -20,79 +20,93 @@
             }
         }
 
-        public double GetMonthlyInvestmentPayment(double loanPayment, double discretionaryIncome)
+        public double MonthlyInvestmentPayment(double loanPayment, double discretionaryIncome)
         {
             return discretionaryIncome - loanPayment;
         }
 
-        public double GetLoanInterest(double loanAmount, int timeInMonths, double monthlyPayment)
+        public double LoanInterest(double loanAmount, int timeInMonths, double monthlyPayment)
         {
             double totalPaid = monthlyPayment * timeInMonths;
             double interestPaid = totalPaid - loanAmount;
             return interestPaid;
         }
 
-        public double GetProjectedInvestment(double monthlyInvestment, double growthRate, int timeInMonths)
+        public double ProjectedInvestment(double monthlyInvestment, double growthRate, int timeInMonths)
         {
             double investmentTotal = monthlyInvestment * ((Math.Pow((1 + growthRate), timeInMonths) - 1) / growthRate); 
             return investmentTotal;
         }
         
-        public double GetReturnOnInvestment(double monthlyInvestment, int timeInMonths, double investmentTotal)
+        public double ReturnOnInvestment(double monthlyInvestment, int timeInMonths, double investmentTotal)
         {
             double returnOnInvestment = investmentTotal - (monthlyInvestment * timeInMonths);
             return returnOnInvestment;
         }
 
-        public double GetSuggestedInvestment(double loanInterest, double growthRate, double timeInMonths)
+        public double SuggestedInvestment(double loanInterest, double growthRate, double timeInMonths)
         {
             double suggestedInvestment = - (growthRate * loanInterest) / 
                 (- Math.Pow(growthRate + 1, timeInMonths) + ((timeInMonths * growthRate) + 1));
             return suggestedInvestment;
         }
 
-        public List<double> GetRemainingLoanBalances(double loanAmount, double interestRate, double monthlyPayment, int timeInMonths)
+        public List<double> RemainingLoanBalances(double loanAmount, double monthlyInterestRate, double monthlyPayment, int timeInMonths)
         {
             List<double> remainingLoanBalances = new List<double>();
-            double currentLoanAmount = loanAmount;
             
-            for(int i = timeInMonths; i > 0; i--)
-            {
-                double loanBalance = Math.Round((currentLoanAmount * (1 + interestRate)) - monthlyPayment, 2);
+            double remainingLoan = loanAmount;
 
-                if(loanBalance <= 0)
-                {
-                    remainingLoanBalances.Add(0);
-                    currentLoanAmount = 0;
-                }
-                else
-                {
-                    remainingLoanBalances.Add(loanBalance);
-                    currentLoanAmount = loanBalance;
-                }
+            for (int i = timeInMonths; i >= 0; i--)
+            {
+                remainingLoanBalances.Add(remainingLoan);
+                remainingLoan = LoanAfterPayment(remainingLoan, monthlyInterestRate, monthlyPayment);
             }
 
             return remainingLoanBalances;
         }
 
-        public List<double> GetProjectedNetWorth(double a_Cash, double a_Property, double a_Investments, double l_Mortgage, double l_Loans, double l_Debts, int timeInYears, double monthlyInvestment, double monthlyLoanPayment, double studentLoanCost, double loanInterestRate, double inflationRate, double investmentGrowthRate)
+        private double LoanAfterPayment(double loanAmount, double interestRate, double payment)
         {
-            List<double> netWorthByYear = new List<double>();
+            if (loanAmount < payment)
+                return 0;
+               
+            double remainingLoan = Math.Round((loanAmount * (1 + interestRate)) - payment, 2);
+            
+            return remainingLoan;
+        }
 
-            // Calculate Projected Values
-            for(int year = 0; year <= timeInYears; year++)
+        public List<double> MonthlyInvestmentGrowth(double monthlyInvestment, double monthlyInvestmentGrowthRate, int months)
+        {
+            double investmentValue = 0;
+
+            List<double> monthlyInvestmentGrowthValues = new List<double>();
+            monthlyInvestmentGrowthValues.Add(0); // Add first month
+
+            for(int m = 1; m <= months; m++)
             {
-                double investments = (a_Investments + (monthlyInvestment * 12)) * Math.Pow(1 + investmentGrowthRate, year);
-                double assetsOther = (a_Cash + a_Property) * Math.Pow(1 + 0.08, year);
-
-                double liabilitiesOther = (l_Mortgage + l_Debts) * Math.Pow(1 + 0.6446, year);
-                double loans = (l_Loans + studentLoanCost - monthlyLoanPayment * 12) * Math.Pow(1 + loanInterestRate, year);
-
-                double netWorth = (assetsOther + investments - liabilitiesOther - loans) * (1 - inflationRate);
-                netWorthByYear.Add(Math.Round(netWorth, 2));
+                investmentValue = Math.Round((investmentValue + monthlyInvestment) * (1 + monthlyInvestmentGrowthRate), 2);
+                monthlyInvestmentGrowthValues.Add(Math.Round(investmentValue - (monthlyInvestment * m), 2));
             }
 
-            return netWorthByYear;
+            return monthlyInvestmentGrowthValues;
+        }
+
+        public List<double> MonthlyNetWorthImpact(double[] liabilityRemaining, double[] assets)
+        {
+            if(liabilityRemaining.Length != assets.Length)
+            {
+                return null;
+            }
+
+            List<double> monthlyNetWorthImpact = new List<double>();
+
+            for(int i = 0; i < assets.Length; i++)
+            {
+                monthlyNetWorthImpact.Add(Math.Round(assets[i] - liabilityRemaining[i], 2));
+            }
+
+            return monthlyNetWorthImpact;
         }
     }
 }
