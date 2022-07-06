@@ -9,6 +9,11 @@
         public double ProjectedInvestment { get; set; }
         public double ReturnOnInvestment { get; set; }
         public double SuggestedInvestmentAmount { get; set; }
+
+        public List<double>? MonthlyRemainingLoanBalances { get; set; }
+        public List<double>? MonthlyInvestmentGrowth { get; set; }
+        public List<double>? MonthlyNetWorthImpact { get; set; }
+
         public List<double>? YearlyRemainingLoanBalances { get; set; }
         public List<double>? YearlyInvestmentGrowth { get; set; }
         public List<double>? YearlyNetWorthImpact { get; set; }
