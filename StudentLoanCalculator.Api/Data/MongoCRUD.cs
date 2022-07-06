@@ -9,7 +9,7 @@ namespace StudentLoanCalculator.Api.Data
     {
         private IMongoDatabase db;
 
-        public MongoCRUD(string database)
+        public MongoCRUD(string database) // For Local
         {
             var settings = new MongoClientSettings();
             settings.ServerApi = new ServerApi(ServerApiVersion.V1);

@@ -14,7 +14,7 @@ namespace StudentLoanCalculator___Team_1.Controllers
         private MongoCRUD context;
         private GrowthRatesModel growthRates;
 
-        public StudentLoanCalculatorController(ILoanCalculator loanCalculator) //, MongoCRUD context
+        public StudentLoanCalculatorController(ILoanCalculator loanCalculator) // , MongoCRUD context
         {
             this.loanCalculator = loanCalculator;
             //this.context = context;
