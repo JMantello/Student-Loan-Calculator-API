@@ -220,8 +220,7 @@ namespace StudentLoanCalculator___Team_1.Controllers
         private List<double> ConvertToYearly(List<double> monthlyList)
         {
             List<double> yearly = new List<double>();
-            yearly = monthlyList.Where((b, i) => i == 0 || (i + 1) % 12 == 0).ToList();
-            yearly.Add(monthlyList.Last());
+            yearly = monthlyList.Where((b, i) => i == 0 || i % 12 == 0).ToList();
 
             return yearly;
         }
