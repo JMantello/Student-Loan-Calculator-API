@@ -7,10 +7,10 @@ namespace StudentLoanCalculator.Api.Models
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string id { get; set; }
-        public double inflation { get; set; }
-        public double conservative { get; set; }
-        public double moderate { get; set; }
-        public double aggressive { get; set; }
 
+        public string riskName { get; set; }
+        public double average { get; set; }
+        public double low { get; set; }
+        public double high { get; set; }
     }
 }

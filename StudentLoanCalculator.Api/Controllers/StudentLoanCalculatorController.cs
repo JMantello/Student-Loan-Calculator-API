@@ -10,24 +10,14 @@ namespace StudentLoanCalculator___Team_1.Controllers
     [Route("[controller]")]
     public class StudentLoanCalculatorController : Controller
     {
-        //private MongoCRUD context;
-        private ILoanCalculator calc;
+        private ILoanCalculator loanCalculator;
+        private MongoCRUD context;
         private GrowthRatesModel growthRates;
 
         public StudentLoanCalculatorController(ILoanCalculator loanCalculator) //, MongoCRUD context
         {
+            this.loanCalculator = loanCalculator;
             //this.context = context;
-            //context.LoadRecords<GrowthRatesModel>("GrowthRates")[0];
-
-            this.calc = loanCalculator;
-
-            growthRates = new GrowthRatesModel
-            {
-                inflation = 0.086,
-                conservative = 0.149,
-                moderate = 0.173,
-                aggressive = 0.238
-            };
         }
 
         public IActionResult Index()
@@ -59,38 +49,73 @@ namespace StudentLoanCalculator___Team_1.Controllers
                 return outputModel;
             }
             
-            // Other validations?
-
             // Destructure input
             double discretionaryIncome = input.DiscretionaryIncome;
             double loanAmount = input.LoanAmount;
             int termInYears = input.TermInYears;
             int termInMonths = termInYears * 12;
             double minimumPayment = input.MinimumPayment;
-            double inflationRate = growthRates.inflation;
             double interestRate = input.InterestRate * 0.01D; // Convert from percentage to decimal
             double monthlyInterestRate = interestRate / 12;
-            double investmentGrowthRate = input.InvestmentGrowthRate * 0.01D;
+            string investmentRisk = input.InvestmentRisk;
+            
+            // Get growth rates
+            if(context == null)
+            {
+                // No db connection
+                GrowthRatesModel conservative = new GrowthRatesModel()
+                {
+                    riskName = "conservative",
+                    average = 0.149,
+                    low = -0.341,
+                    high = 0.343
+                };
+
+                GrowthRatesModel moderate = new GrowthRatesModel()
+                {
+                    riskName = "moderate",
+                    average = 0.173,
+                    low = -0.438,
+                    high = 0.526
+                };
+
+                GrowthRatesModel aggressive = new GrowthRatesModel()
+                {
+                    riskName = "aggressive",
+                    average = 0.238,
+                    low = -0.417,
+                    high = 1.017
+                };
+                
+                switch(investmentRisk)
+                {
+                    case "moderate": growthRates = moderate; break;
+                    case "aggressive": growthRates = aggressive; break;
+                    default: growthRates = conservative; break;
+
+                }
+            } else
+            {
+                // Get growth rates from Db
+                growthRates = context.LoadGrowthRates<GrowthRatesModel>(investmentRisk);
+            }
+            
+            double investmentGrowthRate = growthRates.average;
             double monthlyInvestmentGrowthRate = investmentGrowthRate / 12;
 
             // Calculations
             double monthlyPaymentToLoan = MonthlyLoanPayment(loanAmount, monthlyInterestRate, termInMonths, minimumPayment);
-            
             double monthlyPaymentToInvest = MonthlyInvestmentPayment(monthlyPaymentToLoan, discretionaryIncome);
-            
             double interestPaid = LoanInterest(loanAmount, termInMonths, monthlyPaymentToLoan);
-            
             double projectedInvestment = ProjectedInvestment(monthlyPaymentToInvest, monthlyInvestmentGrowthRate, termInMonths);
-            
             double returnOnInvestment = ReturnOnInvestment(monthlyPaymentToInvest, termInMonths, projectedInvestment);
-            
             double suggestedInvestmentAmount = SuggestedInvestment(interestPaid, monthlyInvestmentGrowthRate, termInMonths);
-            
-            List<double> remainingLoanBalances = RemainingLoanBalances(loanAmount, monthlyInterestRate, monthlyPaymentToLoan, termInMonths);
-           
+            List<double> monthlyRemainingLoanBalances = MonthlyRemainingLoanBalances(loanAmount, monthlyInterestRate, monthlyPaymentToLoan, termInMonths);
+            List<double> yearlyRemainingLoanBalances = YearlyRemainingLoanBalances(loanAmount, monthlyInterestRate, monthlyPaymentToLoan, termInMonths);
             List<double> monthlyInvestmentGrowth = MonthlyInvestmentGrowth(monthlyPaymentToInvest, monthlyInvestmentGrowthRate, termInMonths);
-
-            List<double> monthlyNetWorthImpact = MonthlyNetWorthImpact(remainingLoanBalances.ToArray(), monthlyInvestmentGrowth.ToArray());
+            List<double> yearlyInvestmentGrowth = YearlyInvestmentGrowth(monthlyPaymentToInvest, monthlyInvestmentGrowthRate, termInMonths);
+            List<double> monthlyNetWorthImpact = MonthlyNetWorthImpact(monthlyRemainingLoanBalances.ToArray(), monthlyInvestmentGrowth.ToArray());
+            List<double> yearlyNetWorthImpact = YearlyNetWorthImpact(monthlyRemainingLoanBalances.ToArray(), monthlyInvestmentGrowth.ToArray());
 
             // Bind output
             outputModel.MonthlyPaymentToLoan = monthlyPaymentToLoan;
@@ -100,9 +125,11 @@ namespace StudentLoanCalculator___Team_1.Controllers
             outputModel.ProjectedInvestment = projectedInvestment;
             outputModel.ReturnOnInvestment = returnOnInvestment;
             outputModel.SuggestedInvestmentAmount = suggestedInvestmentAmount;
-            outputModel.RemainingLoanBalances = remainingLoanBalances;
-            outputModel.MonthlyInvestmentGrowth = monthlyInvestmentGrowth;
-            outputModel.MonthlyNetWorthImpact = monthlyNetWorthImpact;
+            outputModel.YearlyRemainingLoanBalances = yearlyRemainingLoanBalances;
+            outputModel.YearlyInvestmentGrowth = yearlyInvestmentGrowth;
+            outputModel.YearlyNetWorthImpact = yearlyNetWorthImpact;
+            outputModel.RiskPercentageHigh = $"{Math.Round(growthRates.high * 100, 2)}%";
+            outputModel.RiskPercentageLow = $"{Math.Round(growthRates.low * 100, 2)}%";
 
             return outputModel;
         }
@@ -110,40 +137,35 @@ namespace StudentLoanCalculator___Team_1.Controllers
         [HttpGet("MonthlyLoanPayment")]
         public double MonthlyLoanPayment(double loanAmount, double monthlyInterestRate, int termInMonths, double minimumPayment)
         {
-            double monthlyLoanPayment = Math.Round(calc.MonthlyLoanPayment(loanAmount, monthlyInterestRate, termInMonths, minimumPayment), 2, MidpointRounding.AwayFromZero);
-
+            double monthlyLoanPayment = Math.Round(loanCalculator.MonthlyLoanPayment(loanAmount, monthlyInterestRate, termInMonths, minimumPayment), 2, MidpointRounding.AwayFromZero);
             return monthlyLoanPayment;
         }
 
         [HttpGet("MonthlyInvestmentPayment")]
         public double MonthlyInvestmentPayment(double monthlyLoanPayment, double discretionaryIncome)
         {
-            double monthlyInvestmentPayment = Math.Round(calc.MonthlyInvestmentPayment(monthlyLoanPayment, discretionaryIncome), 2);
-
+            double monthlyInvestmentPayment = Math.Round(loanCalculator.MonthlyInvestmentPayment(monthlyLoanPayment, discretionaryIncome), 2);
             return monthlyInvestmentPayment;
         }
 
         [HttpGet("LoanInterest")]
         public double LoanInterest(double loanAmount, int termInMonths, double monthlyLoanPayment)
         {
-            double loanInterest = Math.Round(calc.LoanInterest(loanAmount, termInMonths, monthlyLoanPayment), 2);
-
+            double loanInterest = Math.Round(loanCalculator.LoanInterest(loanAmount, termInMonths, monthlyLoanPayment), 2);
             return loanInterest;
         }
 
         [HttpGet("ProjectedInvestment")]
         public double ProjectedInvestment(double monthlyInvestmentPayment, double monthlyInvestmentGrowthRate, int termInMonths)
         {
-            double projectedInvestmentTotal = Math.Round(calc.ProjectedInvestment(monthlyInvestmentPayment, monthlyInvestmentGrowthRate, termInMonths), 2);
-
+            double projectedInvestmentTotal = Math.Round(loanCalculator.ProjectedInvestment(monthlyInvestmentPayment, monthlyInvestmentGrowthRate, termInMonths), 2);
             return projectedInvestmentTotal;
         }
 
         [HttpGet("ReturnOnInvestment")]
         public double ReturnOnInvestment(double monthlyInvestmentPayment, int termInMonths, double projectedInvestmentTotal)
         {
-            double returnOnInvestment = Math.Round(calc.ReturnOnInvestment(monthlyInvestmentPayment, termInMonths, projectedInvestmentTotal), 2);
-
+            double returnOnInvestment = Math.Round(loanCalculator.ReturnOnInvestment(monthlyInvestmentPayment, termInMonths, projectedInvestmentTotal), 2);
             return returnOnInvestment;
         }
 
@@ -151,33 +173,57 @@ namespace StudentLoanCalculator___Team_1.Controllers
         public double SuggestedInvestment(double loanInterest, double monthlyInvestmentGrowthRate, double termInMonths)
         {
             // Finds the monthly amount to invest so that at the end of the term, the calculated growth will be equal to the interest cost from the loan.
-            double suggestedInvestmentAmount = Math.Round(calc.SuggestedInvestment(loanInterest, monthlyInvestmentGrowthRate, termInMonths), 2);
-
+            double suggestedInvestmentAmount = Math.Round(loanCalculator.SuggestedInvestment(loanInterest, monthlyInvestmentGrowthRate, termInMonths), 2);
             return suggestedInvestmentAmount;
         }
 
         [HttpGet("RemainingLoanBalances")]
-        public List<double> RemainingLoanBalances(double loanAmount, double monthlyInterestRate, double monthlyLoanPayment, int termInMonths)
+        public List<double> MonthlyRemainingLoanBalances(double loanAmount, double monthlyInterestRate, double monthlyLoanPayment, int termInMonths)
         {
-            List<double> remainingLoanBalances = calc.RemainingLoanBalances(loanAmount, monthlyInterestRate, monthlyLoanPayment, termInMonths);
+            List<double> remainingLoanBalances = loanCalculator.RemainingLoanBalances(loanAmount, monthlyInterestRate, monthlyLoanPayment, termInMonths);
 
             return remainingLoanBalances;
+        }
+
+        [HttpGet("RemainingLoanBalances")]
+        public List<double> YearlyRemainingLoanBalances(double loanAmount, double monthlyInterestRate, double monthlyLoanPayment, int termInMonths)
+        {
+            return ConvertToYearly(MonthlyRemainingLoanBalances(loanAmount, monthlyInterestRate, monthlyLoanPayment, termInMonths));
         }
 
         [HttpGet("MonthlyInvestmentGrowth")]
         public List<double> MonthlyInvestmentGrowth(double monthlyInvestment, double monthlyInvestmentGrowthRate, int months)
         {
-            List<double> monthlyInvestmentGrowthValues = calc.MonthlyInvestmentGrowth(monthlyInvestment, monthlyInvestmentGrowthRate, months);
+            List<double> monthlyInvestmentGrowth = loanCalculator.MonthlyInvestmentGrowth(monthlyInvestment, monthlyInvestmentGrowthRate, months);
+            return monthlyInvestmentGrowth;
+        }
 
-            return monthlyInvestmentGrowthValues;
+        [HttpGet("YearlyInvestmentGrowth")]
+        public List<double> YearlyInvestmentGrowth(double monthlyInvestment, double monthlyInvestmentGrowthRate, int months)
+        {
+            return ConvertToYearly(MonthlyInvestmentGrowth(monthlyInvestment, monthlyInvestmentGrowthRate, months));
         }
 
         [HttpGet("MonthlyNetWorthImpact")]
         public List<double> MonthlyNetWorthImpact(double[] liabilityRemaining, double[] assets)
         {
-            List<double> monthlyNetWorthImpact = calc.MonthlyNetWorthImpact(liabilityRemaining, assets);
-
+            List<double> monthlyNetWorthImpact = loanCalculator.MonthlyNetWorthImpact(liabilityRemaining, assets);
             return monthlyNetWorthImpact;
+        }
+
+        [HttpGet("YearlyNetWorthImpact")]
+        public List<double> YearlyNetWorthImpact(double[] liabilityRemaining, double[] assets)
+        {
+            return ConvertToYearly(MonthlyNetWorthImpact(liabilityRemaining, assets));
+        }
+
+        private List<double> ConvertToYearly(List<double> monthlyList)
+        {
+            List<double> yearly = new List<double>();
+            yearly = monthlyList.Where((b, i) => i == 0 || (i + 1) % 12 == 0).ToList();
+            yearly.Add(monthlyList.Last());
+
+            return yearly;
         }
     }
 }
