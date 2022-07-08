@@ -8,7 +8,7 @@ namespace StudentLoanCalculator.Domain
 {
     public interface ILoanCalculator
     {
-        public double MonthlyLoanPayment(double loanAmount, double interestRate, int timeInMonths, double minimumPayment);
+        public double MonthlyLoanPayment(double loanAmount, double interestRate, int timeInMonths);
        
         public double MonthlyInvestmentPayment(double loanPayment, double discretionaryIncome);
        
