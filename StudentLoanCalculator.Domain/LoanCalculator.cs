@@ -2,22 +2,14 @@
 {
     public class LoanCalculator : ILoanCalculator
     {
-        public LoanCalculator()
-        {
-        }
+        public LoanCalculator() {}
 
-        public double MonthlyLoanPayment(double loanAmount, double interestRate, int timeInMonths, double minimumPayment)
+        public double MonthlyLoanPayment(double loanAmount, double interestRate, int timeInMonths)
         {
             double monthlyPayment = loanAmount * interestRate * 
-                (Math.Pow(1 + interestRate, timeInMonths) / (Math.Pow((1 + interestRate), timeInMonths) - 1));
+                (Math.Pow(1 + interestRate, timeInMonths) / (Math.Pow(1 + interestRate, timeInMonths) - 1));
 
-            if (monthlyPayment >= minimumPayment)
-            {
-                return monthlyPayment;
-            } else
-            {
-                return minimumPayment;
-            }
+            return monthlyPayment;
         }
 
         public double MonthlyInvestmentPayment(double loanPayment, double discretionaryIncome)
@@ -34,7 +26,7 @@
 
         public double ProjectedInvestment(double monthlyInvestment, double growthRate, int timeInMonths)
         {
-            double investmentTotal = monthlyInvestment * ((Math.Pow((1 + growthRate), timeInMonths) - 1) / growthRate); 
+            double investmentTotal = monthlyInvestment * ((Math.Pow(1 + growthRate, timeInMonths) - 1) / growthRate); 
             return investmentTotal;
         }
         
