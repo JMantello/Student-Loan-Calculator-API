@@ -10,14 +10,14 @@ namespace StudentLoanCalculator___Team_1.Controllers
     [Route("[controller]")]
     public class StudentLoanCalculatorController : Controller
     {
-        private ILoanCalculator loanCalculator;
-        private MongoCRUD context;
+        private readonly ILoanCalculator loanCalculator;
+        private readonly MongoCRUD context;
         private GrowthRatesModel growthRates;
 
-        public StudentLoanCalculatorController(ILoanCalculator loanCalculator) // , MongoCRUD context
+        public StudentLoanCalculatorController(ILoanCalculator loanCalculator, MongoCRUD context) 
         {
             this.loanCalculator = loanCalculator;
-            //this.context = context;
+            this.context = context;
         }
 
         public IActionResult Index()
@@ -219,8 +219,7 @@ namespace StudentLoanCalculator___Team_1.Controllers
 
         private List<double> ConvertToYearly(List<double> monthlyList)
         {
-            List<double> yearly = new List<double>();
-            yearly = monthlyList.Where((b, i) => i == 0 || i % 12 == 0).ToList();
+            List<double> yearly = monthlyList.Where((b, i) => i == 0 || i % 12 == 0).ToList();
 
             return yearly;
         }
