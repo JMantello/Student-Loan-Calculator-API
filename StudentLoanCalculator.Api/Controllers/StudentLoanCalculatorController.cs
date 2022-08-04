@@ -37,12 +37,6 @@ namespace StudentLoanCalculator___Team_1.Controllers
                 return outputModel;
             }
 
-            if (input.DiscretionaryIncome < input.MinimumPayment)
-            {
-                Console.WriteLine("Discretionary income must exceed minimum payment");
-                return outputModel;
-            }
-
             if (input.TermInYears <= 0)
             {
                 Console.WriteLine("Loan period must be greater than 0");
@@ -54,7 +48,6 @@ namespace StudentLoanCalculator___Team_1.Controllers
             double loanAmount = input.LoanAmount;
             int termInYears = input.TermInYears;
             int termInMonths = termInYears * 12;
-            double minimumPayment = input.MinimumPayment;
             double interestRate = input.InterestRate * 0.01D; // Convert from percentage to decimal
             double monthlyInterestRate = interestRate / 12;
             string investmentRisk = input.InvestmentRisk;
@@ -104,7 +97,7 @@ namespace StudentLoanCalculator___Team_1.Controllers
             double monthlyInvestmentGrowthRate = investmentGrowthRate / 12;
 
             // Calculations
-            double monthlyPaymentToLoan = MonthlyLoanPayment(loanAmount, monthlyInterestRate, termInMonths, minimumPayment);
+            double monthlyPaymentToLoan = MonthlyLoanPayment(loanAmount, monthlyInterestRate, termInMonths);
             double monthlyPaymentToInvest = MonthlyInvestmentPayment(monthlyPaymentToLoan, discretionaryIncome);
             double interestPaid = LoanInterest(loanAmount, termInMonths, monthlyPaymentToLoan);
             double projectedInvestment = ProjectedInvestment(monthlyPaymentToInvest, monthlyInvestmentGrowthRate, termInMonths);
@@ -135,9 +128,9 @@ namespace StudentLoanCalculator___Team_1.Controllers
         }
 
         [HttpGet("MonthlyLoanPayment")]
-        public double MonthlyLoanPayment(double loanAmount, double monthlyInterestRate, int termInMonths, double minimumPayment)
+        public double MonthlyLoanPayment(double loanAmount, double monthlyInterestRate, int termInMonths)
         {
-            double monthlyLoanPayment = Math.Round(loanCalculator.MonthlyLoanPayment(loanAmount, monthlyInterestRate, termInMonths, minimumPayment), 2, MidpointRounding.AwayFromZero);
+            double monthlyLoanPayment = Math.Round(loanCalculator.MonthlyLoanPayment(loanAmount, monthlyInterestRate, termInMonths), 2, MidpointRounding.AwayFromZero);
             return monthlyLoanPayment;
         }
 

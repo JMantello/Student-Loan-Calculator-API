@@ -9,7 +9,7 @@ namespace StudentLoanCalculator.Api.Data
     {
         private IMongoDatabase db;
 
-        public MongoCRUD(string database) // For Local
+        public MongoCRUD(string database) // For Local Server
         {
             var settings = new MongoClientSettings();
             settings.ServerApi = new ServerApi(ServerApiVersion.V1);
@@ -83,8 +83,6 @@ namespace StudentLoanCalculator.Api.Data
             inputModel.LoanAmount = 40000;
             inputModel.InterestRate = 5.8;
             inputModel.TermInYears = 20;
-            inputModel.MinimumPayment = 200;
-            inputModel.InvestmentGrowthRate = 10.5;
 
             SavedCalculationModel savedCalculation = new SavedCalculationModel();
             savedCalculation.Name = "My saved calculation";
