@@ -19,7 +19,7 @@ namespace StudentLoanCalculator.Api
             builder.Services.AddSingleton<ILoanCalculator, LoanCalculator>();
 
             // MongoDB
-            MongoCRUD db = new MongoCRUD("StudentLoadDb");
+            MongoCRUD db = new MongoCRUD("StudentLoadDb"); // Local connection
             builder.Services.AddSingleton(db);
 
             var app = builder.Build();
