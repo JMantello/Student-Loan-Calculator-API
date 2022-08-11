@@ -1,11 +1,10 @@
 using StudentLoanCalculator.Domain;
-using StudentLoanCalculator.Api.Identity;
-using StudentLoanCalculator.Api.Models;
 using StudentLoanCalculator.Api.Data;
 using MongoDB.Driver;
 
 namespace StudentLoanCalculator.Api
 {
+    // RS: Everything should be inside the .csproj That is a folder in and of itself
     internal class Program
     {
         static void Main(string[] args)

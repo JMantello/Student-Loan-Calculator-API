@@ -2,8 +2,6 @@
 {
     public class LoanCalculator : ILoanCalculator
     {
-        public LoanCalculator() {}
-
         public double MonthlyLoanPayment(double loanAmount, double interestRate, int timeInMonths)
         {
             double monthlyPayment = loanAmount * interestRate * 
@@ -45,7 +43,7 @@
 
         public List<double> RemainingLoanBalances(double loanAmount, double monthlyInterestRate, double monthlyPayment, int timeInMonths)
         {
-            List<double> remainingLoanBalances = new List<double>();
+            List<double> remainingLoanBalances = new List<double>(timeInMonths);
             
             double remainingLoan = loanAmount;
 

@@ -20,7 +20,7 @@ namespace StudentLoanCalculator.Domain
         
         public double SuggestedInvestment(double loanInterest, double growthRate, double timeInMonths);
         
-        public List<double> RemainingLoanBalances(double loanAmount, double monthyInterestRate, double monthlyPayment, int timeInMonths);
+        public List<double> RemainingLoanBalances(double loanAmount, double monthlyInterestRate, double monthlyPayment, int timeInMonths);
         
         List<double> MonthlyInvestmentGrowth(double monthlyInvestment, double monthlyInvestmentGrowthRate, int months);
 

@@ -7,6 +7,7 @@ namespace StudentLoanCalculator.Api.Data
 {
     public class MongoCRUD
     {
+        // Data should go in domain
         private IMongoDatabase db;
 
         public MongoCRUD(string database) // For Local Server
@@ -62,10 +63,10 @@ namespace StudentLoanCalculator.Api.Data
             collection.DeleteOne(filter);
         }
 
-        public T LoadGrowthRates<T>(string riskName)
+        public T LoadGrowthRates<T>(InvestmentRiskKind riskKind)
         {
             var collection = db.GetCollection<T>("GrowthRates");
-            var filter = Builders<T>.Filter.Eq("riskName", riskName);
+            var filter = Builders<T>.Filter.Eq("riskKind", riskKind);
 
             return collection.Find(filter).First();
         }
@@ -79,7 +80,7 @@ namespace StudentLoanCalculator.Api.Data
             defaultUser.SavedCalculations = new List<SavedCalculationModel>();
 
             InputModel inputModel = new InputModel();
-            inputModel.DiscretionaryIncome = 1500;
+            inputModel.MonthlyDiscretionaryIncome = 1500;
             inputModel.LoanAmount = 40000;
             inputModel.InterestRate = 5.8;
             inputModel.TermInYears = 20;
@@ -95,36 +96,13 @@ namespace StudentLoanCalculator.Api.Data
 
         public void InsertDefaultGrowthRates()
         {
-            MongoCRUD db = new MongoCRUD("StudentLoanDb");
-
-            GrowthRatesModel conservative = new GrowthRatesModel()
-            {
-                riskName = "conservative",
-                average = 0.149,
-                low = -0.341,
-                high = 0.343
-            };
-
-            GrowthRatesModel moderate = new GrowthRatesModel()
-            {
-                riskName = "moderate",
-                average = 0.173,
-                low = -0.438,
-                high = 0.526
-            };
-
-            GrowthRatesModel aggressive = new GrowthRatesModel()
-            {
-                riskName = "aggressive",
-                average = 0.238,
-                low = -0.417,
-                high = 1.017
-            };
+            GrowthRatesModel conservative = GrowthRatesModel.DefaultGrowthRates[InvestmentRiskKind.Conservative];
+            GrowthRatesModel moderate = GrowthRatesModel.DefaultGrowthRates[InvestmentRiskKind.Conservative];
+            GrowthRatesModel aggressive = GrowthRatesModel.DefaultGrowthRates[InvestmentRiskKind.Conservative];
 
             InsertRecord("GrowthRates", conservative);
             InsertRecord("GrowthRates", moderate);
             InsertRecord("GrowthRates", aggressive);
-
         }
     }
 }
